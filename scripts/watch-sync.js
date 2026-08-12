@@ -14,10 +14,25 @@ const REMOTE_DIR = process.env.REMOTE_DIR || `/home/${REMOTE_USER}/Dev/server-da
 
 console.log('⚡ Starting Zenbook Hot-Reload File Watcher...');
 
-// Ensure remote workspace directory structure exists
+// Ensure remote workspace directory structure exists and sync current build
 async function initRemote() {
-  await runSshCommand(`mkdir -p ${REMOTE_DIR}/server ${REMOTE_DIR}/src ${REMOTE_DIR}/public`);
   console.log(`📁 Target directory on Zenbook: ${REMOTE_DIR}`);
+  console.log('🚀 Performing initial full sync of dist/ and server/ to Zenbook...');
+  
+  await runSshCommand(`mkdir -p ${REMOTE_DIR}/server ${REMOTE_DIR}/src ${REMOTE_DIR}/public ${REMOTE_DIR}/dist/assets`);
+
+  // Sync dist folder & docker-compose.yml
+  const { exec } = await import('child_process');
+  await new Promise(r => exec(`scp -r ${rootDir}/dist/* ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/dist/`, r));
+  await new Promise(r => exec(`scp -r ${rootDir}/server/* ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/server/`, r));
+  await new Promise(r => exec(`scp ${rootDir}/docker-compose.yml ${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_DIR}/docker-compose.yml`, r));
+  
+  console.log('🎉 Initial sync complete! Syncing into running server-dash Docker container...');
+  await runSshCommand(`docker cp ${REMOTE_DIR}/dist server-dash:/app/ 2>/dev/null || true`);
+  await runSshCommand(`docker cp ${REMOTE_DIR}/server server-dash:/app/ 2>/dev/null || true`);
+  
+  console.log('🔄 Restarting node server on Zenbook...');
+  await runSshCommand(`docker restart server-dash 2>/dev/null || pkill -f "node server/index.js" 2>/dev/null || true`);
 }
 
 initRemote();
