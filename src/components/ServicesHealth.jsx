@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Server,
   Copy,
+  Plus,
 } from 'lucide-react';
 
 const ICON_MAP = {
@@ -55,6 +56,7 @@ export default function ServicesHealth({
   onRestartContainer,
   onOpenLogs,
   onOpenMinecraftManager,
+  onOpenAddService,
   actionStateMap = {},
 }) {
   const hostName = sshHost || tailscaleIp || 'zenbook-server';
@@ -67,9 +69,18 @@ export default function ServicesHealth({
           <Activity size={20} color="#06b6d4" />
           <span>Homelab Services Health Matrix</span>
         </div>
-        <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
-          Endpoints checked directly via MagicDNS & local socket ping
-        </span>
+        
+        <div className="section-actions">
+          <span className="probe-badge-text">Direct MagicDNS & Socket Probe</span>
+          <button
+            onClick={onOpenAddService}
+            className="btn btn-sm btn-add-service"
+            title="Register new self-hosted app or port"
+          >
+            <Plus size={14} />
+            <span>Add Service</span>
+          </button>
+        </div>
       </div>
 
       <div className="services-grid">
@@ -254,6 +265,21 @@ export default function ServicesHealth({
             </div>
           );
         })}
+
+        {/* Add Custom Service Card */}
+        <div
+          className="glass-card service-card add-service-card"
+          onClick={onOpenAddService}
+          title="Click to track a new homelab app or web portal"
+        >
+          <div className="add-service-card-body">
+            <div className="add-service-icon-box">
+              <Plus size={28} color="#06b6d4" />
+            </div>
+            <h3>Add Custom Service</h3>
+            <p>Register a new self-hosted app, port, or dashboard portal</p>
+          </div>
+        </div>
       </div>
     </div>
   );

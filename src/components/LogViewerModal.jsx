@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Terminal, X, Copy, RefreshCw, Check, Search, Download } from 'lucide-react';
+import { Terminal, X, Copy, RefreshCw, Check, Search, Download, Bot } from 'lucide-react';
 
 export default function LogViewerModal({ containerName, onClose }) {
   const [logs, setLogs] = useState('Loading container logs via SSH...');
@@ -72,6 +72,16 @@ export default function LogViewerModal({ containerName, onClose }) {
             </div>
 
             <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                className="btn btn-sm"
+                onClick={() => onOpenAiDiagnosis && onOpenAiDiagnosis(logs, `Logs for container ${containerName}`)}
+                style={{ background: 'rgba(99, 102, 241, 0.15)', color: '#818cf8', borderColor: 'rgba(99, 102, 241, 0.3)' }}
+                title="Diagnose logs using local Ollama AI model"
+              >
+                <Bot size={14} />
+                <span>Analyze with Ollama AI</span>
+              </button>
+
               <button className="btn btn-sm" onClick={handleCopy}>
                 {copied ? <Check size={14} color="#10b981" /> : <Copy size={14} />}
                 <span>{copied ? 'Copied' : 'Copy'}</span>

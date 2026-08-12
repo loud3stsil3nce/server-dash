@@ -351,6 +351,8 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .section-title {
@@ -359,6 +361,23 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.section-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+}
+
+.probe-badge-text {
+  font-size: 0.73rem;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-family: var(--font-mono);
 }
 
 .services-grid {
@@ -860,3 +879,535 @@ body {
   display: inline-block;
   margin-left: 0.5rem;
 }
+
+/* ==========================================
+   Telemetry Performance Charts Styles
+   ========================================== */
+.telemetry-charts-card {
+  margin-bottom: 1.5rem;
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.charts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.charts-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.charts-title h2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.chart-tabs {
+  display: flex;
+  background: rgba(15, 23, 42, 0.9);
+  padding: 0.25rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 0.25rem;
+}
+
+.chart-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chart-tab-btn:hover {
+  color: #f8fafc;
+}
+
+.chart-tab-btn.active-cpu {
+  background: rgba(6, 182, 212, 0.2);
+  color: #38bdf8;
+  border-color: rgba(6, 182, 212, 0.4);
+}
+
+.chart-tab-btn.active-mem {
+  background: rgba(192, 132, 252, 0.2);
+  color: #c084fc;
+  border-color: rgba(192, 132, 252, 0.4);
+}
+
+.chart-tab-btn.active-disk {
+  background: rgba(251, 191, 36, 0.2);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.4);
+}
+
+.chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chart-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chart-stat-badge {
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+}
+
+.chart-stat-badge .stat-label {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.chart-stat-badge .stat-val {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.chart-stat-badge .stat-val.current { color: #38bdf8; }
+.chart-stat-badge .stat-val.peak { color: #fbbf24; }
+.chart-stat-badge .stat-val.low { color: #34d399; }
+
+.chart-svg {
+  width: 100%;
+  height: 180px;
+  overflow: visible;
+}
+
+.chart-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: #64748b;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* ==========================================
+   Custom Modal Windows & Feature Overlays
+   ========================================== */
+.modal-title-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.modal-icon-badge {
+  padding: 0.5rem;
+  border-radius: 8px;
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-subtitle {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 0.15rem;
+}
+
+/* Process Explorer */
+.process-modal-content {
+  max-width: 900px !important;
+  width: 95%;
+}
+
+.process-search-bar {
+  padding: 0.85rem 1.5rem;
+  background: rgba(5, 8, 17, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.process-table-body {
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.process-table th {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.stat-pill {
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.05);
+  color: #cbd5e1;
+}
+
+.stat-pill.pill-high-cpu {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  font-weight: 700;
+}
+
+.stat-pill.pill-high-mem {
+  background: rgba(167, 139, 250, 0.2);
+  color: #c084fc;
+  font-weight: 700;
+}
+
+.command-cell {
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #e2e8f0;
+}
+
+.btn-terminate {
+  color: #f87171 !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+.btn-terminate:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.25) !important;
+}
+
+/* Container Exec Shell */
+.exec-modal-content {
+  max-width: 820px !important;
+  width: 95%;
+}
+
+.exec-badge {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+.container-tag {
+  font-family: var(--font-mono);
+  color: #34d399;
+  font-weight: 600;
+}
+
+.exec-presets-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background: rgba(5, 8, 17, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
+.presets-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.exec-terminal-body {
+  height: 280px;
+  overflow-y: auto;
+  background: #04060d;
+  padding: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #e2e8f0;
+}
+
+.term-banner {
+  color: #64748b;
+  margin-bottom: 0.5rem;
+}
+
+.exec-log-pre {
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+  font-family: inherit;
+}
+
+.exec-input-form {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba(15, 23, 42, 0.8);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.exec-input-wrapper {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background: #04060d;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  gap: 0.5rem;
+}
+
+.exec-prompt-symbol {
+  color: #34d399;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.exec-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #f8fafc;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+/* Ollama AI Assistant */
+.ai-modal-content {
+  max-width: 800px !important;
+  width: 95%;
+}
+
+.ai-badge {
+  background: rgba(99, 102, 241, 0.12) !important;
+  border-color: rgba(99, 102, 241, 0.25) !important;
+}
+
+.ai-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.form-group-custom {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+}
+
+.form-label-custom {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.15rem;
+}
+
+.form-input-custom, .form-select-custom, .form-textarea-custom {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  background: #04060d;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #f8fafc;
+  font-size: 0.83rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-input-custom:focus, .form-select-custom:focus, .form-textarea-custom:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+}
+
+.form-helper-text {
+  font-size: 0.73rem;
+  color: #64748b;
+  margin-top: 0.3rem;
+  margin-bottom: 0.1rem;
+  line-height: 1.4;
+  display: block;
+}
+
+.quick-prompts-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+  background: rgba(5, 8, 17, 0.4);
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.quick-prompts-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.quick-prompts-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.prompt-chip {
+  font-size: 0.72rem !important;
+  background: rgba(99, 102, 241, 0.12) !important;
+  color: #a5b4fc !important;
+  border: 1px solid rgba(99, 102, 241, 0.25) !important;
+}
+
+.prompt-chip:hover {
+  background: rgba(99, 102, 241, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.ai-submit-btn {
+  background: linear-gradient(135deg, #4f46e5, #6366f1) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  padding: 0.7rem !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.ai-response-card {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  background: #04060d;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 12px;
+}
+
+.ai-response-header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #818cf8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+
+.ai-response-text {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: #e2e8f0;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* Add Service Modal */
+.add-service-modal-content {
+  max-width: 580px !important;
+  width: 95%;
+}
+
+.add-service-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.btn-add-service {
+  background: rgba(6, 182, 212, 0.15) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(6, 182, 212, 0.35) !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-add-service:hover {
+  background: rgba(6, 182, 212, 0.3) !important;
+  transform: translateY(-1px);
+}
+
+.add-service-card {
+  border: 2px dashed rgba(6, 182, 212, 0.3) !important;
+  background: rgba(6, 182, 212, 0.03) !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 190px;
+  transition: all 0.25s ease;
+}
+
+.add-service-card:hover {
+  border-color: rgba(6, 182, 212, 0.7) !important;
+  background: rgba(6, 182, 212, 0.08) !important;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.2);
+}
+
+.add-service-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+.add-service-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(6, 182, 212, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem;
+}
+
+.add-service-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.add-service-card p {
+  font-size: 0.76rem;
+  color: #94a3b8;
+  max-width: 220px;
+}
+

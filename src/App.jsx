@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Header from './components/Header';
 import MetricsCards from './components/MetricsCards';
+import TelemetryCharts from './components/TelemetryCharts';
 import ServicesHealth from './components/ServicesHealth';
 import ContainerTable from './components/ContainerTable';
 import LogViewerModal from './components/LogViewerModal';
 import SettingsModal from './components/SettingsModal';
 import InteractiveTerminal from './components/InteractiveTerminal';
 import MinecraftManagerModal from './components/MinecraftManagerModal';
+import ProcessExplorerModal from './components/ProcessExplorerModal';
+import ContainerExecModal from './components/ContainerExecModal';
+import OllamaAssistantModal from './components/OllamaAssistantModal';
+import AddServiceModal from './components/AddServiceModal';
 import Toast from './components/Toast';
 
 export default function App() {
@@ -17,9 +22,17 @@ export default function App() {
 
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [refreshInterval, setRefreshInterval] = useState(1000); // Default to Real-Time SSE Stream (1s)
+
+  // Modals & Drawers state
   const [activeLogContainer, setActiveLogContainer] = useState(null);
+  const [activeExecContainer, setActiveExecContainer] = useState(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isMinecraftManagerOpen, setIsMinecraftManagerOpen] = useState(false);
+  const [isProcessExplorerOpen, setIsProcessExplorerOpen] = useState(false);
+  const [isAiAssistantOpen, setIsAiAssistantOpen] = useState(false);
+  const [isAddServiceOpen, setIsAddServiceOpen] = useState(false);
+  const [aiDiagnosisData, setAiDiagnosisData] = useState({ logs: '', context: '' });
+
   const [actionStateMap, setActionStateMap] = useState({});
   const [toast, setToast] = useState(null);
 
@@ -107,12 +120,10 @@ export default function App() {
     }
   };
 
-  // Handle Container Actions (Restart, Start, Stop) with fluid optimistic feedback
+  // Handle Container Actions (Restart, Start, Stop) with optimistic feedback
   const handleContainerAction = async (name, action) => {
-    // 1. Set action state for button spinner & disable redundant clicks
     setActionStateMap((prev) => ({ ...prev, [name]: action }));
 
-    // 2. Optimistic UI update in container table for instant 0ms user feedback
     setContainers((prev) =>
       prev.map((c) => {
         if (c.name === name) {
@@ -126,7 +137,6 @@ export default function App() {
       })
     );
 
-    // 3. Show info toast
     setToast({
       type: 'info',
       message: `Sending ${action} signal to container ${name}...`,
@@ -146,7 +156,6 @@ export default function App() {
           message: `Container ${name} ${action}ed successfully (${data.newState || 'OK'}).`,
         });
 
-        // Immediate sync + follow-up sync to catch full startup
         await fetchAllData();
         setTimeout(() => fetchAllData(), 2500);
       } else {
@@ -184,7 +193,15 @@ export default function App() {
       />
 
       {/* Top Telemetry Cards Grid */}
-      <MetricsCards systemStats={systemStats} containersCount={containers.length} />
+      <MetricsCards
+        systemStats={systemStats}
+        containersCount={containers.length}
+        onOpenProcesses={() => setIsProcessExplorerOpen(true)}
+        onOpenAiAssistant={() => setIsAiAssistantOpen(true)}
+      />
+
+      {/* Live Animated Telemetry Charts */}
+      <TelemetryCharts systemStats={systemStats} />
 
       {/* Homelab Services Health Matrix */}
       <ServicesHealth
@@ -194,6 +211,7 @@ export default function App() {
         onRestartContainer={(name) => handleContainerAction(name, 'restart')}
         onOpenLogs={(name) => setActiveLogContainer(name)}
         onOpenMinecraftManager={() => setIsMinecraftManagerOpen(true)}
+        onOpenAddService={() => setIsAddServiceOpen(true)}
         actionStateMap={actionStateMap}
       />
 
@@ -203,6 +221,7 @@ export default function App() {
         onRestartContainer={(name) => handleContainerAction(name, 'restart')}
         onContainerAction={handleContainerAction}
         onOpenLogs={(name) => setActiveLogContainer(name)}
+        onOpenExec={(name) => setActiveExecContainer(name)}
         actionStateMap={actionStateMap}
       />
 
@@ -226,6 +245,48 @@ export default function App() {
         <LogViewerModal
           containerName={activeLogContainer}
           onClose={() => setActiveLogContainer(null)}
+          onOpenAiDiagnosis={(logs, context) => {
+            setAiDiagnosisData({ logs, context });
+            setIsAiAssistantOpen(true);
+          }}
+        />
+      )}
+
+      {/* Process Explorer Modal */}
+      {isProcessExplorerOpen && (
+        <ProcessExplorerModal
+          onClose={() => setIsProcessExplorerOpen(false)}
+          onToast={setToast}
+        />
+      )}
+
+      {/* Container Exec Modal */}
+      {activeExecContainer && (
+        <ContainerExecModal
+          containerName={activeExecContainer}
+          onClose={() => setActiveExecContainer(null)}
+          onToast={setToast}
+        />
+      )}
+
+      {/* Ollama AI Assistant Modal */}
+      {isAiAssistantOpen && (
+        <OllamaAssistantModal
+          initialLogs={aiDiagnosisData.logs}
+          initialContext={aiDiagnosisData.context}
+          onClose={() => {
+            setIsAiAssistantOpen(false);
+            setAiDiagnosisData({ logs: '', context: '' });
+          }}
+        />
+      )}
+
+      {/* Add Custom Service Modal */}
+      {isAddServiceOpen && (
+        <AddServiceModal
+          onClose={() => setIsAddServiceOpen(false)}
+          onSave={fetchAllData}
+          onToast={setToast}
         />
       )}
 

@@ -209,6 +209,16 @@ export default function ContainerTable({
 
                         <button
                           className="btn btn-sm"
+                          onClick={() => onOpenExec && onOpenExec(c.name)}
+                          title="Execute Command Inside Container Shell"
+                          style={{ color: '#34d399' }}
+                        >
+                          <Terminal size={13} />
+                          <span>Exec</span>
+                        </button>
+
+                        <button
+                          className="btn btn-sm"
                           onClick={() => onRestartContainer(c.name)}
                           disabled={isProcessing}
                           title="Restart Container"

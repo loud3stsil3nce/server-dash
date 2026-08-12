@@ -1,7 +1,7 @@
 import React from 'react';
 import { Cpu, HardDrive, Database, Layers, Thermometer, Zap } from 'lucide-react';
 
-export default function MetricsCards({ systemStats, containersCount }) {
+export default function MetricsCards({ systemStats, containersCount, onOpenProcesses, onOpenAiAssistant }) {
   const cpuPercent = systemStats?.cpuPercent || 0;
   const cpuCores = systemStats?.cpuCores || 20;
   const topProcess = systemStats?.topProcess || 'N/A';
@@ -18,9 +18,14 @@ export default function MetricsCards({ systemStats, containersCount }) {
   return (
     <div className="metrics-grid">
       {/* 1. CPU Usage */}
-      <div className="glass-card metric-card" style={{ '--card-accent': getCpuColor(cpuPercent) }}>
+      <div className="glass-card metric-card cursor-pointer group hover:border-cyan-500/50 transition-all" onClick={onOpenProcesses} style={{ '--card-accent': getCpuColor(cpuPercent) }}>
         <div className="metric-header">
-          <span className="metric-title">Zenbook CPU Load ({cpuCores} Threads)</span>
+          <span className="metric-title flex items-center justify-between w-full">
+            <span>Zenbook CPU Load ({cpuCores} Threads)</span>
+            <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              Click for Processes ↗
+            </span>
+          </span>
           <div className="metric-icon-wrapper" style={{ color: getCpuColor(cpuPercent) }}>
             <Cpu size={20} />
           </div>
@@ -43,7 +48,7 @@ export default function MetricsCards({ systemStats, containersCount }) {
       </div>
 
       {/* 2. Memory RAM */}
-      <div className="glass-card metric-card" style={{ '--card-accent': getMemColor(memory.percent) }}>
+      <div className="glass-card metric-card cursor-pointer group hover:border-purple-500/50 transition-all" onClick={onOpenProcesses} style={{ '--card-accent': getMemColor(memory.percent) }}>
         <div className="metric-header">
           <span className="metric-title">System RAM Memory</span>
           <div className="metric-icon-wrapper" style={{ color: getMemColor(memory.percent) }}>
@@ -93,9 +98,14 @@ export default function MetricsCards({ systemStats, containersCount }) {
       </div>
 
       {/* 4. Thermal & Docker Status */}
-      <div className="glass-card metric-card" style={{ '--card-accent': '#8b5cf6' }}>
+      <div className="glass-card metric-card cursor-pointer group hover:border-indigo-500/50 transition-all" onClick={onOpenAiAssistant} style={{ '--card-accent': '#8b5cf6' }}>
         <div className="metric-header">
-          <span className="metric-title">Host Thermal & Docker</span>
+          <span className="metric-title flex items-center justify-between w-full">
+            <span>Host Thermal & AI</span>
+            <span className="text-[10px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+              Ask Ollama AI 🤖
+            </span>
+          </span>
           <div className="metric-icon-wrapper" style={{ color: '#8b5cf6' }}>
             <Thermometer size={20} />
           </div>
