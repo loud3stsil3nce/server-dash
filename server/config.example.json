@@ -1,0 +1,52 @@
+{
+  "sshHost": "your-server-host",
+  "tailscaleIp": "100.x.y.z",
+  "sshUser": "username",
+  "sshPort": 22,
+  "sshKeyPath": "~/.ssh/id_ed25519",
+  "strictHostKeyChecking": false,
+  "autoRefreshInterval": 5000,
+  "demoMode": false,
+  "services": [
+    {
+      "id": "pihole",
+      "name": "Pi-hole DNS",
+      "category": "Network & AdBlock",
+      "containerName": "pihole",
+      "port": 80,
+      "protocol": "http",
+      "healthPath": "/admin/login",
+      "uiPath": "/admin",
+      "btnLabel": "Open Pi-hole Admin",
+      "icon": "ShieldCheck",
+      "description": "Network-wide ad blocking & DNS sinkhole"
+    },
+    {
+      "id": "minecraft",
+      "name": "Minecraft Server",
+      "category": "Gaming",
+      "containerName": "minecraft",
+      "port": 25565,
+      "protocol": "tcp",
+      "healthPath": "",
+      "uiPath": "",
+      "btnLabel": "Server Address",
+      "icon": "Gamepad2",
+      "description": "Survival Multiplayer Vanilla/Paper server"
+    },
+    {
+      "id": "ollama",
+      "name": "Ollama AI Host",
+      "category": "AI & Machine Learning",
+      "containerName": "ollama",
+      "port": 11434,
+      "uiPort": 3000,
+      "protocol": "http",
+      "healthPath": "/api/version",
+      "uiPath": "/",
+      "btnLabel": "Launch Open WebUI",
+      "icon": "Cpu",
+      "description": "Local Large Language Model inference engine"
+    }
+  ]
+}
