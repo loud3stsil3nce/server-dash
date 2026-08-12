@@ -16,6 +16,7 @@ export default function ContainerTable({
   onRestartContainer,
   onContainerAction,
   onOpenLogs,
+  onOpenExec,
   actionStateMap = {},
 }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -209,9 +210,15 @@ export default function ContainerTable({
 
                         <button
                           className="btn btn-sm"
-                          onClick={() => onOpenExec && onOpenExec(c.name)}
-                          title="Execute Command Inside Container Shell"
-                          style={{ color: '#34d399' }}
+                          onClick={() => {
+                            if (!isUp) {
+                              alert(`Container '${c.name}' is currently stopped. Start the container first to execute shell commands.`);
+                              return;
+                            }
+                            if (onOpenExec) onOpenExec(c.name);
+                          }}
+                          title={isUp ? "Execute Command Inside Container Shell" : "Container is stopped (Start container to exec)"}
+                          style={{ color: isUp ? '#34d399' : '#64748b' }}
                         >
                           <Terminal size={13} />
                           <span>Exec</span>
