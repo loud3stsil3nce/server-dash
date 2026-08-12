@@ -10,6 +10,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "start": "node server/index.js",
+    "test": "node scripts/run-tests.js",
     "watch": "node scripts/watch-sync.js"
   },
   "dependencies": {
