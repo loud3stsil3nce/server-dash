@@ -1,0 +1,35 @@
+{
+  "name": "server-dash",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"cyan,magenta\" \"npm run server\" \"npm run client\"",
+    "server": "nodemon server/index.js",
+    "client": "vite --port 8050",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server/index.js",
+    "watch": "node scripts/watch-sync.js"
+  },
+  "dependencies": {
+    "concurrently": "^10.0.4",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "lucide-react": "^1.31.0",
+    "multer": "^2.2.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "ssh2": "^1.17.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "chokidar": "^5.0.0",
+    "nodemon": "^3.1.14",
+    "oxlint": "^1.75.0",
+    "vite": "^8.2.0"
+  }
+}
