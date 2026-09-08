@@ -97,9 +97,9 @@ router.post('/terminal/exec', async (req, res) => {
   const config = loadConfig();
 
   if (!command || !command.trim()) return res.json({ success: true, output: '' });
-  const trimmedCmd = command.trim();
+  const rawCmd = command.trim();
 
-  if (trimmedCmd === 'clear') return res.json({ success: true, clear: true, output: '' });
+  if (rawCmd === 'clear') return res.json({ success: true, clear: true, output: '' });
 
   const remoteUser = config.sshUser || 'rafiurrahman';
   const remoteHome = `/home/${remoteUser}`;
@@ -110,33 +110,83 @@ router.post('/terminal/exec', async (req, res) => {
   let shellCwd = cleanCwd === '~' ? remoteHome : cleanCwd.startsWith('~/') ? `${remoteHome}/${cleanCwd.slice(2)}` : cleanCwd;
 
   if (config.demoMode) {
-    return res.json({ success: true, output: `[DEMO MODE] Executed: ${trimmedCmd}\nSimulated output for '${trimmedCmd}'\n` });
+    return res.json({ success: true, output: `[DEMO MODE] Executed: ${rawCmd}\nSimulated output for '${rawCmd}'\n` });
   }
 
-  if (trimmedCmd.startsWith('cd ') || trimmedCmd === 'cd') {
-    const cdTarget = trimmedCmd === 'cd' ? '~' : trimmedCmd.slice(3).trim();
-    let targetPath = cdTarget === '~' ? remoteHome : cdTarget.startsWith('~/') ? `${remoteHome}/${cdTarget.slice(2)}` : cdTarget;
+  // Smart command normalization for common typos & shell syntax
+  let normalizedCmd = rawCmd;
+  if (normalizedCmd === 'cd..' || normalizedCmd.startsWith('cd..')) {
+    normalizedCmd = 'cd ..' + normalizedCmd.slice(4);
+  } else if (normalizedCmd === 'cd/ls' || normalizedCmd === 'cd/ls/' || normalizedCmd === 'cd /ls') {
+    normalizedCmd = 'cd / && ls';
+  } else if (normalizedCmd.startsWith('cd/') && normalizedCmd !== 'cd/') {
+    normalizedCmd = 'cd /' + normalizedCmd.slice(3);
+  }
 
-    const cdCmd = `cd "${shellCwd}" 2>/dev/null || cd ${remoteHome}; cd "${targetPath}" 2>/dev/null && pwd`;
-    const cdResult = await runSshCommand(cdCmd, { timeout: 10000 });
+  const marker = '___CWD_MARKER___';
+  const fullCmd = `cd "${shellCwd}" 2>/dev/null || cd ${remoteHome}; ${normalizedCmd}; echo ""; echo "${marker}:$(pwd)"`;
 
-    if (cdResult.success && cdResult.stdout) {
-      const fullPath = cdResult.stdout.trim();
-      const displayPath = fullPath.startsWith(remoteHome) ? '~' + fullPath.slice(remoteHome.length) : fullPath;
-      return res.json({ success: true, newCwd: fullPath, displayPath: displayPath || '~', output: '' });
-    } else {
-      return res.json({ success: false, output: cdResult.stderr || `bash: cd: ${cdTarget}: No such file or directory`, error: cdResult.error });
+  const result = await runSshCommand(fullCmd, { timeout: 25000 });
+
+  let rawOutput = (result.stdout || '').trim();
+  let stderr = (result.stderr || '').trim();
+  let newCwd = shellCwd;
+
+  if (rawOutput.includes(marker)) {
+    const parts = rawOutput.split(new RegExp(`\\n?${marker}:`));
+    rawOutput = (parts[0] || '').trim();
+    if (parts[1]) {
+      newCwd = parts[1].trim().split('\n')[0].trim();
     }
   }
 
-  const fullCmd = `cd "${shellCwd}" 2>/dev/null || cd ${remoteHome}; ${trimmedCmd}`;
-  const result = await runSshCommand(fullCmd, { timeout: 25000 });
+  const displayPath = newCwd.startsWith(remoteHome) ? '~' + newCwd.slice(remoteHome.length) : newCwd;
+
+  let finalOutput = rawOutput;
+  if (!finalOutput && stderr) {
+    finalOutput = stderr;
+  } else if (!finalOutput && result.success) {
+    if (normalizedCmd.startsWith('cd ') || normalizedCmd === 'cd') {
+      finalOutput = `Directory changed to ${displayPath || '~'}`;
+    } else {
+      finalOutput = 'Command completed with no output.';
+    }
+  }
 
   res.json({
     success: result.success,
-    output: result.stdout || result.stderr || (result.success ? 'Command completed with no output.' : result.error || 'Command failed.'),
+    newCwd,
+    displayPath: displayPath || '~',
+    output: finalOutput,
     error: result.error,
   });
+});
+
+// Terminal Tab Auto-Completion
+router.post('/terminal/complete', async (req, res) => {
+  const { command, cwd } = req.body;
+  if (!command) return res.json({ matches: [] });
+
+  const config = loadConfig();
+  const remoteUser = config.sshUser || 'rafiurrahman';
+  const remoteHome = `/home/${remoteUser}`;
+
+  let cleanCwd = cwd && cwd.trim() ? cwd.trim() : '~';
+  let shellCwd = cleanCwd === '~' ? remoteHome : cleanCwd.startsWith('~/') ? `${remoteHome}/${cleanCwd.slice(2)}` : cleanCwd;
+
+  const parts = command.trim().split(/\s+/);
+  const lastArg = parts[parts.length - 1] || '';
+  const prefix = parts.slice(0, -1).join(' ');
+
+  const compCmd = `cd "${shellCwd}" 2>/dev/null || cd ${remoteHome}; compgen -f "${lastArg}" 2>/dev/null || ls -a 2>/dev/null | grep "^${lastArg}"`;
+  const result = await runSshCommand(compCmd, { timeout: 5000 });
+
+  if (result.success && result.stdout) {
+    const matches = result.stdout.split('\n').map((m) => m.trim()).filter(Boolean);
+    return res.json({ matches, prefix, lastArg });
+  }
+
+  res.json({ matches: [], prefix, lastArg });
 });
 
 export default router;
