@@ -221,6 +221,7 @@ export default function ServicesHealth({
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-sm"
+                    title={`Open ${svc.name} (${webUrl})`}
                     style={{ flex: 1, textDecoration: 'none' }}
                   >
                     <ExternalLink size={13} />

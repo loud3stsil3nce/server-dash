@@ -31,7 +31,7 @@ export default function Header({
           <Server size={24} />
         </div>
         <div className="brand-title">
-          <h1>Zenbook Homelab</h1>
+          <h1>Homelab Server</h1>
           <p>Tailscale Mesh • Live Docker & SSH Monitor</p>
         </div>
       </div>
